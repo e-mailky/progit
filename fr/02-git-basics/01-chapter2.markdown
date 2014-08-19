@@ -81,7 +81,7 @@ Si vous lancez cette commande juste après un clonage, vous devriez voir ce qui 
 
 	$ git status
 	# On branch master
-	nothing to commit (working directory clean)
+	nothing to commit, working directory clean
 
 Ce message signifie que votre copie de travail est propre, en d'autres mots, aucun fichier suivi n'a été modifié.
 Git ne voit pas non plus de fichiers non-suivis, sinon ils seraient listés ici.
@@ -738,7 +738,9 @@ Cette commande fonctionne avec de nombreux formats — vous pouvez indiquer une
 
 Vous pouvez aussi restreindre la liste aux *commits* vérifiant certains critères de recherche.
 L'option `--author` permet de filtrer sur un auteur spécifique, et l'option `--grep` permet de chercher des mots clés dans les messages de validation.
-Notez que si vous cherchez seulement des *commits* correspondant simultanément aux deux critères, vous devez ajouter l'option `--all-match`, car par défaut ces commandes retournent les *commits* vérifiant au moins un critère lors de recherche.
+Notez que si vous spécifiez à la fois `--author` et `--grep`, la commande retournera seulement des *commits* correspondant simultanément aux deux critères.
+
+Si vous souhaitez spécifier plusieurs options `--grep`,  vous devez ajouter l'option `--all-match`, car par défaut ces commandes retournent les *commits* vérifiant au moins un critère de recherche.
 
 La dernière option vraiment utile à `git log` est la spécification d'un chemin.
 Si un répertoire ou un nom de fichier est spécifié, le journal est limité aux *commits* qui ont introduit des modifications aux fichiers concernés.
@@ -924,7 +926,7 @@ Par exemple, mon dépôt Grit ressemble à ceci.
 	koke      git://github.com/koke/grit.git
 	origin    git@github.com:mojombo/grit.git
 
-Cela signifie que nous pouvons tirer très facilement des contributions depuis certains utilisateurs.
+Cela signifie que je peux tirer très facilement des contributions depuis certains utilisateurs.
 Mais il est à noter que seul le dépôt distant `origin` utilise une URL SSH, ce qui signifie que c'est le seul sur lequel je peux pousser (nous traiterons de ceci au chapitre 4).
 
 ### Ajouter des dépôts distants ###
@@ -1000,7 +1002,7 @@ Si vous lancez cette commande avec un nom court particulier, tel que `origin`, v
 	    ticgit
 
 
-Cela donne le liste des URL pour le dépôt distant ainsi que la liste des branches distantes suivies.
+Cela donne la liste des URL pour le dépôt distant ainsi que la liste des branches distantes suivies.
 Cette commande vous informe que si vous êtes sur la branche `master` et si vous lancez `git pull`, il va automatiquement fusionner la branche `master` du dépôt distant après avoir récupéré toutes les références sur le serveur distant.
 Cela donne aussi la liste des autres références qu'il aura tirées.
 
@@ -1289,9 +1291,8 @@ De nombreuses personnes utilisent parfaitement Git sans connaître aucun de ces 
 ### Auto-Complétion ###
 
 Si vous utilisez le shell Bash, Git est livré avec un script d'auto-complétion utile.
-Téléchargez le code source de Git, et jetez un œil dans le répertoire `contrib/completion`.
-Il devrait y avoir un fichier nommé `git-completion.bash`.
-Copiez ce fichier dans votre répertoire personnel et ajoutez cette ligne à votre fichier `.bashrc` :
+Téléchargez le directement depuis le code source de Git à https://github.com/git/git/blob/master/contrib/git-completion.bash .
+Copiez ce fichier dans votre répertoire personnel sous le nom `.git-completion.bash` et ajoutez cette ligne à votre fichier `.bashrc` :
 
 	source ~/.git-completion.bash
 

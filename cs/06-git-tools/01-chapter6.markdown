@@ -59,7 +59,7 @@ Někteří uživatelé bývají zmateni, že mohou mít v repozitáři – shodo
 
 Pokud náhodou zapíšete objekt, který má stejnou hodnotu SHA-1 otisku jako předchozí objekt ve vašem repozitáři, Git už uvidí předchozí objekt v databázi Git a bude předpokládat, že už byl zapsán. Pokud se někdy v budoucnosti pokusíte znovu provést checkout tohoto objektu, vždy dostanete data prvního objektu.
 
-Měli bychom však také říci, jak moc je nepravděpodobné, že taková situace nastane. Otisk SHA-1 má 20 bytů, neboli 160 bitů. Počet objektů s náhodným otiskem, které bychom potřebovali k 50% pravděpodobnosti, že nastane jediná kolize, je asi 280 (vzorec k určení pravděpodobnosti kolize je `p = (n(n-1)/2) * (1/2^160))`. 2^80 je 1,2 * 10^24, neboli 1 milion miliard miliard. To je 1200násobek počtu všech zrnek písku na celé Zemi.
+Měli bychom však také říci, jak moc je nepravděpodobné, že taková situace nastane. Otisk SHA-1 má 20 bytů, neboli 160 bitů. Počet objektů s náhodným otiskem, které bychom potřebovali k 50% pravděpodobnosti, že nastane jediná kolize, je asi 2^80 (vzorec k určení pravděpodobnosti kolize je `p = (n(n-1)/2) * (1/2^160)`). 2^80 je 1,2 * 10^24, neboli 1 milion miliard miliard. To je 1200násobek počtu všech zrnek písku na celé Zemi.
 
 Abyste si udělali představu, jak je nepravděpodobné, že dojde ke kolizi hodnot SHA-1, připojujeme jeden malý příklad. Kdyby 6,5 miliardy lidí na zemi programovalo a každý by každou sekundu vytvořil kód odpovídající celé historii linuxového jádra (1 milion objektů Git) a odesílal ho do jednoho obřího repozitáře Git, trvalo by 5 let, než by repozitář obsahoval dost objektů na to, aby existovala 50% pravděpodobnost, že dojde ke kolizi jediného objektu SHA-1. To už je pravděpodobnější, že všichni členové vašeho programovacího týmu budou během jedné noci v navzájem nesouvisejících incidentech napadeni a zabiti smečkou vlků.
 
@@ -82,19 +82,19 @@ Jednou z věcí, které probíhají na pozadí systému Git, zatímco vy pracuje
 Svůj reflog si můžete nechat zobrazit příkazem `git reflog`:
 
 	$ git reflog
-	734713b... HEAD@{0}: commit: fixed refs handling, added gc auto, updated
-	d921970... HEAD@{1}: merge phedders/rdocs: Merge made by recursive.
-	1c002dd... HEAD@{2}: commit: added some blame and merge stuff
-	1c36188... HEAD@{3}: rebase -i (squash): updating HEAD
-	95df984... HEAD@{4}: commit: # This is a combination of two commits.
-	1c36188... HEAD@{5}: rebase -i (squash): updating HEAD
-	7e05da5... HEAD@{6}: rebase -i (pick): updating HEAD
+	734713b HEAD@{0}: commit: fixed refs handling, added gc auto, updated
+	d921970 HEAD@{1}: merge phedders/rdocs: Merge made by recursive.
+	1c002dd HEAD@{2}: commit: added some blame and merge stuff
+	1c36188 HEAD@{3}: rebase -i (squash): updating HEAD
+	95df984 HEAD@{4}: commit: # This is a combination of two commits.
+	1c36188 HEAD@{5}: rebase -i (squash): updating HEAD
+	7e05da5 HEAD@{6}: rebase -i (pick): updating HEAD
 
 Pokaždé, když je z nějakého důvodu aktualizován vrchol větve, Git tuto informaci uloží v dočasné historii reflog. Pomocí těchto dat lze rovněž specifikovat starší revize. Chcete-li zobrazit pátou poslední hodnotu ukazatele HEAD svého repozitáře, použijte referenci `@{n}` z výstupu reflog:
 
 	$ git show HEAD@{5}
 
-Tuto syntax můžete použít také k zobrazení pozice, na níž se větev nacházela před určitou dobou. Chcete-li například zjistit, kde byla vaše větev `master` včera (yesterday), můžete zadat příkaz:
+Tuto syntaxi můžete použít také k zobrazení pozice, na níž se větev nacházela před určitou dobou. Chcete-li například zjistit, kde byla vaše větev `master` včera (yesterday), můžete zadat příkaz:
 
 	$ git show master@{yesterday}
 
@@ -146,7 +146,7 @@ Zobrazit předchozí revizi pak můžete pomocí `HEAD^`, což doslova znamená 
 
 	    Merge commit 'phedders/rdocs'
 
-Za znakem `^` můžete zadat také číslo, např. `d921970^2` označuje „druhého rodiče revize d921970“. Tato syntax má význam pouze u revizí vzniklých sloučením, které mají více než jednoho rodiče. První rodič je větev, na níž jste se během začlenění nacházeli, druhým rodičem je větev, kterou jste začleňovali:
+Za znakem `^` můžete zadat také číslo, např. `d921970^2` označuje „druhého rodiče revize d921970“. Tato syntaxe má význam pouze u revizí vzniklých sloučením, které mají více než jednoho rodiče. První rodič je větev, na níž jste se během začlenění nacházeli, druhým rodičem je větev, kterou jste začleňovali:
 
 	$ git show d921970^
 	commit 1c002dd4b536e7479fe34593e72e6c6c1819e53b
@@ -188,7 +188,7 @@ Nyní, když umíte určit jednotlivé revize, podíváme se, jak lze určovat c
 
 #### Dvě tečky ####
 
-Nejčastěji se při označení intervalu používá dvojtečková syntax. Pomocí ní systému Git v podstatě říkáte, aby uvažoval celý interval revizí, které jsou dostupné z jedné revize, ale nejsou dostupné z jiné. Předpokládejme tedy, že máte historii revizí jako na obrázku 6-1.
+Nejčastěji se při označení intervalu používá dvojtečková syntaxe. Pomocí ní systému Git v podstatě říkáte, aby uvažoval celý interval revizí, které jsou dostupné z jedné revize, ale nejsou dostupné z jiné. Předpokládejme tedy, že máte historii revizí jako na obrázku 6-1.
 
 Insert 18333fig0601.png
 Obrázek 6-1. Příklad historie revizí pro výběr intervalu
@@ -205,7 +205,7 @@ A samozřejmě si můžete nechat zobrazit i pravý opak, všechny revize ve vě
 	F
 	E
 
-Tento log využijete, pokud chcete udržovat větev `experiment` stále aktuální a zjistit, co hodláte začlenit. Tato syntax se velmi často používá také ke zjištění, co hodláte odeslat do vzdálené větve:
+Tento log využijete, pokud chcete udržovat větev `experiment` stále aktuální a zjistit, co hodláte začlenit. Tato syntaxe se velmi často používá také ke zjištění, co hodláte odeslat do vzdálené větve:
 
 	$ git log origin/master..HEAD
 
@@ -214,13 +214,13 @@ Jednu stranu intervalu můžete zcela vynechat, Git na její místo automaticky 
 
 #### Několik bodů ####
 
-Dvojtečková syntax je užitečná jako zkrácený výraz. Možná ale budete chtít k označení revize určit více než dvě větve, např. až budete chtít zjistit, které revize jsou obsaženy ve všech ostatních větvích a zároveň nejsou obsaženy ve větvi, na níž se právě nacházíte. V systému Git to můžete provést buď zadáním znaku `^` nebo parametru `--not` před referencí, jejíž dostupné revize si nepřejete zobrazit. Tyto tři příkazy jsou tedy ekvivalentní:
+Dvojtečková syntaxe je užitečná jako zkrácený výraz. Možná ale budete chtít k označení revize určit více než dvě větve, např. až budete chtít zjistit, které revize jsou obsaženy ve všech ostatních větvích a zároveň nejsou obsaženy ve větvi, na níž se právě nacházíte. V systému Git to můžete provést buď zadáním znaku `^` nebo parametru `--not` před referencí, jejíž dostupné revize si nepřejete zobrazit. Tyto tři příkazy jsou tedy ekvivalentní:
 
 	$ git log refA..refB
 	$ git log ^refA refB
 	$ git log refB --not refA
 
-Tato syntax je užitečná zejména proto, že pomocí ní můžete zadat více než dvě reference, což není pomocí dvojtečkové syntaxe možné. Pokud chcete zobrazit například všechny revize, které jsou dostupné ve větvi `refA` nebo `refB`, ale nikoli ve větvi `refC`, zadejte jeden z následujících příkazů:
+Tato syntaxe je užitečná zejména proto, že pomocí ní můžete zadat více než dvě reference, což není pomocí dvojtečkové syntaxe možné. Pokud chcete zobrazit například všechny revize, které jsou dostupné ve větvi `refA` nebo `refB`, ale nikoli ve větvi `refC`, zadejte jeden z následujících příkazů:
 
 	$ git log refA refB ^refC
 	$ git log refA refB --not refC
@@ -229,7 +229,7 @@ Tím máte v rukou velmi efektivní systém vyhledávání revizí, který vám 
 
 #### Tři tečky ####
 
-Poslední významnou syntaxí k určení intervalu je trojtečková syntax, která vybere všechny revize dostupné ve dvou referencích, ale ne v obou zároveň. Podívejme se ještě jednou na příklad historie revizí na obrázku 6-1.
+Poslední významnou syntaxí k určení intervalu je trojtečková syntaxe, která vybere všechny revize dostupné ve dvou referencích, ale ne v obou zároveň. Podívejme se ještě jednou na příklad historie revizí na obrázku 6-1.
 Chcete-li zjistit, co je ve větvi `master` nebo `experiment`, ale nechcete vidět jejich společné reference, zadejte příkaz:
 
 	$ git log master...experiment
@@ -457,14 +457,14 @@ Váš pracovní adresář se vyčistil:
 
 	$ git status
 	# On branch master
-	nothing to commit (working directory clean)
+	nothing to commit, working directory clean
 
 Nyní můžete bez obav přepnout větve a pracovat na jiném úkolu, vaše změny byly uloženy do zásobníku. Chcete-li se podívat, které soubory jste odložili, spusťte příkaz `git stash list`:
 
 	$ git stash list
 	stash@{0}: WIP on master: 049d078 added the index file
-	stash@{1}: WIP on master: c264051... Revert "added file_size"
-	stash@{2}: WIP on master: 21d80a5... added number to log
+	stash@{1}: WIP on master: c264051 Revert "added file_size"
+	stash@{2}: WIP on master: 21d80a5 added number to log
 
 V tomto případě byly už dříve provedeny dva další odklady, a máte tak k dispozici tři různé odklady. Naposledy odložené soubory můžete znovu aplikovat příkazem, který byl uveden už v nápovědě ve výstupu původního příkazu stash: `git stash apply`. Chcete-li aplikovat některý ze starších odkladů, můžete ho určit na základě jeho označení, např. `git stash apply stash@{2}`. Pokud u příkazu neoznačíte konkrétní odklad, Git se automaticky pokusí aplikovat ten nejnovější:
 
@@ -498,8 +498,8 @@ Parametr apply se pouze pokusí aplikovat odloženou práci, ta zůstává ulož
 
 	$ git stash list
 	stash@{0}: WIP on master: 049d078 added the index file
-	stash@{1}: WIP on master: c264051... Revert "added file_size"
-	stash@{2}: WIP on master: 21d80a5... added number to log
+	stash@{1}: WIP on master: c264051 Revert "added file_size"
+	stash@{2}: WIP on master: 21d80a5 added number to log
 	$ git stash drop stash@{0}
 	Dropped stash@{0} (364e91f3f268f0900bc3ee613f9f733e82aaed43)
 
@@ -583,12 +583,19 @@ Spuštěním tohoto příkazu otevřete textový editor se seznamem revizí zhru
 	#
 	# Commands:
 	#  p, pick = use commit
+	#  r, reword = use commit, but edit the commit message
 	#  e, edit = use commit, but stop for amending
 	#  s, squash = use commit, but meld into previous commit
+	#  f, fixup = like "squash", but discard this commit's log message
+	#  x, exec = run command (the rest of the line) using shell
+	#
+	# These lines can be re-ordered; they are executed from top to bottom.
 	#
 	# If you remove a line here THAT COMMIT WILL BE LOST.
+	#
 	# However, if you remove everything, the rebase will be aborted.
 	#
+	# Note that empty commits are commented out
 
 Tady bychom chtěli upozornit, že revize jsou uvedeny v opačném pořadí, než jste zvyklí v případě příkazu `log`. Po spuštění příkazu `log` by se zobrazilo následující:
 
@@ -606,6 +613,10 @@ Skript je třeba upravit tak, aby zastavil na revizi, v níž chcete provést zm
 	pick a5f4a0d added cat-file
 
 Po uložení změn a zavření editoru vás Git vrátí zpět na poslední revizi v seznamu a zobrazí vám příkazový řádek s touto zprávou:
+
+<!-- This is actually weird, as the SHA-1 of 7482e0d is not present in the list,
+nor is the commit message. Please review
+-->
 
 	$ git rebase -i HEAD~3
 	Stopped at 7482e0d... updated the gemspec to hopefully work better
@@ -649,12 +660,19 @@ Další možností, jak lze využít interaktivního nástroje přeskládání, 
 	#
 	# Commands:
 	#  p, pick = use commit
+	#  r, reword = use commit, but edit the commit message
 	#  e, edit = use commit, but stop for amending
 	#  s, squash = use commit, but meld into previous commit
+	#  f, fixup = like "squash", but discard this commit's log message
+	#  x, exec = run command (the rest of the line) using shell
+	#
+	# These lines can be re-ordered; they are executed from top to bottom.
 	#
 	# If you remove a line here THAT COMMIT WILL BE LOST.
+	#
 	# However, if you remove everything, the rebase will be aborted.
 	#
+	# Note that empty commits are commented out
 
 Zadáte-li místo pick nebo edit instrukci pro komprimaci squash, Git aplikuje změnu na tomto řádku a změnu těsně před ní a zároveň sloučí dohromady obě zprávy k revizím. Chcete-li tedy vytvořit jedinou revizi z těchto tří revizí, bude skript vypadat takto:
 
@@ -1014,7 +1032,7 @@ Dobrým způsobem, jak to v systému Git provést, je učinit ze všech podslož
 
 ### Problémy se submoduly ###
 
-Používání submodulů se však vždy neobejde bez zádrhelů. Zaprvé je třeba, abyste si v adresáři submodulu počínali opatrně. Spustíte-li příkaz `git submodule update`, provedete tím checkout konkrétní verze projektu, avšak nikoli v rámci větve. Říká se tomu oddělená hlava (detached head) – znamená to, že soubor HEAD ukazuje přímo na revizi, ne na symbolickou referenci. Problém je, že většinou nechcete pracovat v prostředí oddělené hlavy, protože tu velmi snadno přijdete o provedené změny. Jestliže nejprve spustíte příkaz `submodule update`, zapíšete v adresáři tohoto submodulu revizi, aniž byste na tuto práci vytvořili novou větev, a poté ze superprojektu znovu spustíte příkaz `git submodule update`, aniž byste mezitím zapisovali revize, Git vaše revize bez varování přepíše. Technicky vzato práci neztratíte, ale nebude žádná větev, která by na ni ukazovala, a tak bude poněkud obtížené získat práci zpět.
+Používání submodulů se však vždy neobejde bez zádrhelů. Zaprvé je třeba, abyste si v adresáři submodulu počínali opatrně. Spustíte-li příkaz `git submodule update`, provedete tím checkout konkrétní verze projektu, avšak nikoli v rámci větve. Říká se tomu oddělená hlava (detached head) – znamená to, že soubor HEAD ukazuje přímo na revizi, ne na symbolickou referenci. Problém je, že většinou nechcete pracovat v prostředí oddělené hlavy, protože byste tak velmi snadno mohli přijít o provedené změny. Jestliže nejprve spustíte příkaz `submodule update`, zapíšete v adresáři tohoto submodulu revizi, aniž byste na tuto práci vytvořili novou větev, a poté ze superprojektu znovu spustíte příkaz `git submodule update`, aniž byste mezitím zapisovali revize, Git vaše revize bez varování přepíše. Technicky vzato práci neztratíte, ale nebude žádná větev, která by na ni ukazovala, a tak bude poněkud obtížené získat práci zpět.
 
 Aby ve vašem projektu k tomuto problému nedošlo, vytvořte během práce v adresáři submodulu příkazem `git checkout -b work` nebo podobným novou větev. Až budete podruhé provádět příkaz submodule update, i tentokrát sice vrátí vaši práci, ale přinejmenším budete mít ukazatel, k němuž se budete moci vrátit.
 
@@ -1077,9 +1095,9 @@ Až poté přepnete zpět, bude adresář `rack` prázdný. Buď můžete spusti
 
 ## Začlenění podstromu ##
 
-Nyní, když jsme poznali obtíže spojené se systémem submodulů, podívejme se na jedno alternativní řešení tohoto problému. Git se vždy při slučování nejprve podívá, co a kam začleňuje, a podle toho zvolí vhodnou strategii začlenění. Pokud slučujete dvě větve, používá Git rekurzivní strategii. Pokud slučujete více než dvě větve, zvolí Git tzv. strategii chobotnice (octopus strategy). Git vybírá tyto strategie automaticky. Rekurzivní strategie zvládá složité třícestné slučování (např. s více než jedním společným předkem), ale nedokáže sloučit více než dvě větve. Chobotnicové sloučení dokáže naproti tomu sloučit několik větví, ale je opatrnější při předcházení složitým konfliktům. Proto je ostatně nastaveno jako výchozí strategie při slučování více než dvou větví.
+Nyní, když jsme poznali obtíže spojené se systémem submodulů, podívejme se na jedno alternativní řešení tohoto problému. Git se vždy při slučování nejprve podívá, co a kam začleňuje, a podle toho zvolí vhodnou strategii začlenění. Pokud slučujete dvě větve, používá Git *rekurzivní* strategii. Pokud slučujete více než dvě větve, zvolí Git tzv. strategii *chobotnice* (octopus strategy). Git vybírá tyto strategie automaticky. Rekurzivní strategie zvládá složité třícestné slučování (např. s více než jedním společným předkem), ale nedokáže sloučit více než dvě větve. Chobotnicové sloučení dokáže naproti tomu sloučit několik větví, ale je opatrnější při předcházení složitým konfliktům. Proto je ostatně nastaveno jako výchozí strategie při slučování více než dvou větví.
 
-Existují však ještě další strategie. Jednou z nich je tzv. začlenění podstromu (subtree merge), které lze použít jako řešení problémů se subprojektem. Ukažme si, jak se dá začlenit stejný adresář rack jako v předchozí části, tentokrát však s využitím strategie začlenění podstromu.
+Existují však ještě další strategie. Jednou z nich je tzv. začlenění *podstromu* (subtree merge), které lze použít jako řešení problémů se subprojektem. Ukažme si, jak se dá začlenit stejný adresář rack jako v předchozí části, tentokrát však s využitím strategie začlenění podstromu.
 
 Začlenění podstromu spočívá v tom, že máte dva projekty a jeden z projektů se promítá do podadresáře druhého projektu a naopak. Pokud určíte strategii začlenění podstromu, je Git natolik inteligentní, aby zjistil, že je jeden podstromem druhého, a provedl sloučení odpovídajícím způsobem – počíná si opravdu sofistikovaně.
 
